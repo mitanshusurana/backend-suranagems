@@ -1,5 +1,5 @@
-# Use the official OpenJDK 23 image
-FROM openjdk:23-jdk-slim AS build
+# Use the official OpenJDK 23 image for the build stage
+FROM openjdk:23-jdk AS build
 
 # Set the working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ FROM openjdk:23-jdk-slim
 EXPOSE 8080
 
 # Copy the built JAR file from the build stage
-COPY --from=build /app/build/libs/suranagems-1.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # Set the entry point for the container
 ENTRYPOINT ["java", "-jar", "app.jar"]
