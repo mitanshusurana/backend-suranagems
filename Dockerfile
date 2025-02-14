@@ -2,7 +2,8 @@ FROM amazoncorretto:23 AS build
 
 WORKDIR /app
 COPY . .
-RUN chmod +x gradlew && \
+RUN yum install -y findutils && \
+    chmod +x gradlew && \
     ./gradlew bootJar --no-daemon
 
 FROM amazoncorretto:23
