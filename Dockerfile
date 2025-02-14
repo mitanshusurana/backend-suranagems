@@ -1,6 +1,7 @@
 FROM amazoncorretto:23 AS build
 
 COPY . .
+RUN chmod +x gradlew  # Add this line to make gradlew executable
 RUN ./gradlew bootJar --no-daemon
 
 FROM amazoncorretto:23
