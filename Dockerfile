@@ -1,6 +1,11 @@
 # Use the official OpenJDK 23 image for the build stage
 FROM openjdk:23-jdk AS build
 
+# Install necessary utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xargs \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory
 WORKDIR /app
 
@@ -17,7 +22,7 @@ COPY src src
 RUN chmod +x gradlew
 
 # Build the application
-RUN ./gradlew bootJar --no-daemon
+RUN ./gradlew bootJar --no-daemon --info
 
 # Use a slim image for the final stage
 FROM openjdk:23-jdk-slim
