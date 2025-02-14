@@ -1,13 +1,12 @@
 FROM amazoncorretto:23 AS build
 
+WORKDIR /app
 COPY . .
-RUN chmod +x gradlew  # Add this line to make gradlew executable
-RUN ./gradlew bootJar --no-daemon
+RUN chmod +x gradlew && \
+    ./gradlew bootJar --no-daemon
 
 FROM amazoncorretto:23
-
+WORKDIR /app
 EXPOSE 8080
-
-COPY --from=build /build/libs/*.jar app.jar
-
+COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
