@@ -1,37 +1,15 @@
-# Use the official OpenJDK 23 image for the build stage
-FROM openjdk:23-jdk AS build
+FROM ubuntu:latest AS build
 
-# Install necessary utilities
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    xargs \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
 
-# Set the working directory
-WORKDIR /app
+RUN ./gradlew bootJar --no-daemon
 
-# Copy the Gradle wrapper and build files
-COPY gradlew gradlew
-COPY gradle gradle
-COPY build.gradle build.gradle
-COPY settings.gradle settings.gradle
+FROM openjdk:17-jdk-slim
 
-# Copy the source code
-COPY src src
-
-# Make the Gradle wrapper executable
-RUN chmod +x gradlew
-
-# Build the application
-RUN ./gradlew bootJar --no-daemon --info
-
-# Use a slim image for the final stage
-FROM openjdk:23-jdk-slim
-
-# Expose the application port
 EXPOSE 8080
 
-# Copy the built JAR file from the build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+COPY --from=build /build/libs/*.jar app.jar
 
-# Set the entry point for the container
 ENTRYPOINT ["java", "-jar", "app.jar"]
