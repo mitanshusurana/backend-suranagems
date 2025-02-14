@@ -1,5 +1,5 @@
-# Use a base image that has OpenJDK 23 pre-installed
-FROM eclipse-temurin:23-jdk AS build
+# Use the official OpenJDK 23 image
+FROM openjdk:23-jdk-slim AS build
 
 # Set the working directory
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN chmod +x gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # Use a slim image for the final stage
-FROM eclipse-temurin:23-jdk-slim
+FROM openjdk:23-jdk-slim
 
 # Expose the application port
 EXPOSE 8080
