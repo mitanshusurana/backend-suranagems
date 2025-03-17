@@ -19,7 +19,8 @@ public class GemReportService {
     }
 
     // Create or Update Gem Report
-    public GemReport createOrUpdateGemReport(GemReport gemReport) { return gemReportRepository.save(gemReport); }  public GemReport createOrUpdateGemReport(GemReport gemReport) { return gemReportRepository.create(gemReport); }
+    public GemReport createOrUpdateGemReport(GemReport gemReport) { return gemReportRepository.save(gemReport); } 
+ public GemReport createGemReport(GemReport gemReport) { return gemReportRepository.create(gemReport); }
 
     // Get Gem Report by ID
     public Optional<GemReport> getGemReportById(String id) {
