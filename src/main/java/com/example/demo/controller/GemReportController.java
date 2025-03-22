@@ -21,8 +21,18 @@ public class GemReportController {
         this.gemReportService = gemReportService;
     }
 
-    @PutMapping public ResponseEntity<GemReport> createGemReport(@RequestBody GemReport gemReport) { GemReport createdGemReport = gemReportService.createOrUpdateGemReport(gemReport); return new ResponseEntity<>(createdGemReport, HttpStatus.CREATED); } 
- @PostMapping public ResponseEntity<GemReport> createGemReport(@RequestBody GemReport gemReport) { GemReport createdGemReport = gemReportService.createGemReport(gemReport); return new ResponseEntity<>(createdGemReport, HttpStatus.CREATED); } 
+    @PutMapping
+    public ResponseEntity<GemReport> updateGemReport(@RequestBody GemReport gemReport) {
+        GemReport createdGemReport = gemReportService.createOrUpdateGemReport(gemReport);
+        return new ResponseEntity<>(createdGemReport, HttpStatus.CREATED);
+    }
+
+    @PostMapping
+    public ResponseEntity<GemReport> createGemReport(@RequestBody GemReport gemReport) {
+        GemReport createdGemReport = gemReportService.createGemReport(gemReport);
+        return new ResponseEntity<>(createdGemReport, HttpStatus.CREATED);
+    }
+
     // Get Gem Report by ID
     @GetMapping("/{id}")
     public ResponseEntity<GemReport> getGemReportById(@PathVariable String id) {
