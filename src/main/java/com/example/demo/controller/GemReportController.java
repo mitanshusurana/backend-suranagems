@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.GemReport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +42,22 @@ public class GemReportController {
     }
 
     // Get all Gem Reports
-    @GetMapping
-    public List<GemReport> getAllGemReports() {
-        return gemReportService.getAllGemReports();
+    @GetMapping()
+    public Page<GemReport> getReports(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) String color,
+            @RequestParam(required = false) Double minWeight,
+            @RequestParam(required = false) Double maxWeight,
+            @RequestParam(required = false) List<String> tags
+    ) {
+        return gemReportService.getGemReports(page, limit, search, category, type, origin, color, minWeight, maxWeight, tags);
     }
+
 
     // Delete Gem Report by ID
     @DeleteMapping("/{id}")

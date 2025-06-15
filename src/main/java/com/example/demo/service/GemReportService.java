@@ -6,12 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.example.demo.repository.GemReportRepository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -58,4 +63,50 @@ public class GemReportService {
     public void deleteGemReportById(String id) {
         gemReportRepository.deleteById(id);
     }
+
+    // Paginated and filtered fetch
+    public Page<GemReport> getGemReports(
+            int page,
+            int limit,
+            String search,
+            String category,
+            String type,
+            String origin,
+            String color,
+            Double minWeight,
+            Double maxWeight,
+            List<String> tags
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Map<String, Object> filters = new HashMap<>();
+
+        // Flexible filters
+        if (search != null && !search.isEmpty()) {
+            filters.put("name", search); // name will be handled as regex in repo
+        }
+        if (category != null && !category.isEmpty()) {
+            filters.put("category", category);
+        }
+        if (type != null && !type.isEmpty()) {
+            filters.put("type", type);
+        }
+        if (origin != null && !origin.isEmpty()) {
+            filters.put("origin", origin);
+        }
+        if (color != null && !color.isEmpty()) {
+            filters.put("color", color);
+        }
+        if (minWeight != null) {
+            filters.put("minWeight", minWeight);
+        }
+        if (maxWeight != null) {
+            filters.put("maxWeight", maxWeight);
+        }
+        if (tags != null && !tags.isEmpty()) {
+            filters.put("tags", tags);
+        }
+        log.info("Filters: {}", filters);
+        return gemReportRepository.filterGemReports(filters, pageable);
+    }
+
 }
